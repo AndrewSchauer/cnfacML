@@ -1,14 +1,32 @@
 Package: cnfacML
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Machine Learning Tools for Avalanche Forecasting
+Version: 0.1.0
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
+    person("Andrew", "Schauer", , "first.last@example.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Description: Machine learning tools for avalanche danger forecasting using
+    Self-Organizing Maps (SOM). Includes season-based and random/sequential
+    data splitting, model training and evaluation, performance metrics,
+    and visualization functions. Supports multi-layer SOM prediction across
+    alpine, treeline, and below-treeline elevation bands.
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
+Depends:
+    R (>= 3.5.0)
 Imports: 
-    lubridate
+    lubridate,
+    kohonen,
+    dplyr,
+    shiny,
+    anytime,
+    ggplot2,
+    tidyr,
+    gridExtra,
+    snotelr
+Suggests:
+    testthat,
+    knitr,
+    rmarkdown
+LazyData: true
