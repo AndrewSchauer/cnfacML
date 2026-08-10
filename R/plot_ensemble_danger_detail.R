@@ -156,28 +156,24 @@ plot_ensemble_danger_detail <- function(som_models, test_data, observation_index
   # Pool all unique training day indices across all winning nodes
   all_indices <- unique(unlist(lapply(winning_nodes, function(x) x$indices)))
 
-  # Collect all danger observations from these pooled days
-  pooled_alp <- c()
-  pooled_tl <- c()
-  pooled_btl <- c()
+  # Collect danger observations for those unique pooled days.
+  # NOTE: this assumes every model in the ensemble was trained on the same
+  # underlying day-indexed dataset (som_models[[i]]$data$danger rows line up
+  # across models) -- the same assumption n_total below already relies on.
+  # If that ever stops being true (e.g. each model trained on a different
+  # resample), this will need to look up each index against the specific
+  # model(s) that produced it instead of a single reference matrix.
+  reference_danger <- som_models[[1]]$data$danger
 
-  for (m in 1:n_models) {
-    som_model <- som_models[[m]]
-    danger_matrix <- som_model$data$danger
-
-    if (is_normalized) {
-      danger_matrix <- apply(danger_matrix, 2, function(col) {
-        sapply(col, denormalize_danger)
-      })
-    }
-
-    # Get danger values for the pooled indices
-    node_indices <- winning_nodes[[m]]$indices
-
-    pooled_alp <- c(pooled_alp, danger_matrix[node_indices, "alp.used"])
-    pooled_tl <- c(pooled_tl, danger_matrix[node_indices, "tl.used"])
-    pooled_btl <- c(pooled_btl, danger_matrix[node_indices, "btl.used"])
+  if (is_normalized) {
+    reference_danger <- apply(reference_danger, 2, function(col) {
+      sapply(col, denormalize_danger)
+    })
   }
+
+  pooled_alp <- reference_danger[all_indices, "alp.used"]
+  pooled_tl  <- reference_danger[all_indices, "tl.used"]
+  pooled_btl <- reference_danger[all_indices, "btl.used"]
 
   # Filter valid values
   valid_pooled_alp <- pooled_alp[!is.na(pooled_alp) & pooled_alp >= 1 & pooled_alp <= 5]
